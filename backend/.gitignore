@@ -1,0 +1,53 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Environment variables
+.env
+
+# Directory for module dependencies
+node_modules/
+
+# Debug files
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Build output
+dist/
+build/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Coverage reports
+coverage/
+
+# MongoDB database files
+*.lock
+dump/
+
+# Operating system files
+*.bak
+*.orig
+
+# Miscellaneous
+*.tgz
+*.tar.gz
+.nyc_output/
+.eslintcache
