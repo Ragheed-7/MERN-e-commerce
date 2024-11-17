@@ -1,10 +1,11 @@
 const express = require('express');
 const Review = require('../models/Review'); // Path to the Review model
+const authMiddleware = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
 // Create a Review (POST /reviews)
-router.post('/create', async (req, res) => {
+router.post('/create',authMiddleware, async (req, res) => {
     const { user, product, rating } = req.body;
 
     try {
@@ -24,7 +25,7 @@ router.post('/create', async (req, res) => {
     }
 });
 // Get a review by ID (GET /reviews/:id)
-router.get('/:id', async (req, res) => {
+router.get('/:id',  async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -51,7 +52,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update a review by ID (PUT /reviews/:id)
-router.put('/update/:id', async (req, res) => {
+router.put('/update/:id',authMiddleware,  async (req, res) => {
     const { id } = req.params;
     const { rating } = req.body;
 
@@ -83,7 +84,7 @@ router.put('/update/:id', async (req, res) => {
 });
 
 // Delete a review by ID (DELETE /reviews/:id)
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/delete/:id',authMiddleware,  async (req, res) => {
     const { id } = req.params;
 
     try {

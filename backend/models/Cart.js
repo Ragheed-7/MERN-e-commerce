@@ -6,7 +6,7 @@ const CartSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    items: [
+    products: [
         {
             product: {
                 type: mongoose.Schema.Types.ObjectId,
@@ -19,12 +19,7 @@ const CartSchema = new mongoose.Schema({
                 min: 1
             }
         }
-    ],
-    total_price: {
-        type: Number,
-        required: true,
-        default: 0
-    }
+    ]
 }, {
     timestamps: {
         createdAt: 'created_at',

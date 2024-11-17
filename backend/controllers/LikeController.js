@@ -1,10 +1,12 @@
 const express = require('express');
 const Like = require('../models/Like'); // Correct import for the Like model
+const mongoose = require('mongoose');
+const authMiddleware = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
 // Create a like
-router.post('/create', async (req, res) => {
+router.post('/create',authMiddleware,  async (req, res) => {
     const { user, product } = req.body;
 
     try {
@@ -30,7 +32,7 @@ router.post('/create', async (req, res) => {
 });
 
 // Update a like
-router.put('/update/:id', async (req, res) => {
+router.put('/update/:id',authMiddleware,  async (req, res) => {
     const { user, product } = req.body;
 
     try {
@@ -63,7 +65,7 @@ router.put('/update/:id', async (req, res) => {
 });
 
 // Delete a like
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/delete/:id',authMiddleware,  async (req, res) => {
     try {
         const like = await Like.findByIdAndDelete(req.params.id);
 
@@ -115,5 +117,42 @@ router.get('/:id', async (req, res) => {
         });
     }
 });
+
+router.get('/user/:userId',authMiddleware,  async (req, res) => {
+    try {
+      const userId = req.params.userId; // Extract userId from route params
+      const page = parseInt(req.query.page) || 1; // Default page is 1
+      const limit = parseInt(req.query.limit) || 3; // Default limit is 3 items per page
+  
+      if (page < 1 || limit < 1) {
+        return res.status(400).json({ message: 'Page and limit must be greater than 0.' });
+      }
+  
+      const skip = (page - 1) * limit; // Calculate the offset
+  
+      // Convert userId to ObjectId
+      const userIdObject = new mongoose.Types.ObjectId(userId);
+  
+      // Fetch likes for the user with pagination
+      const likes = await Like.find({ user: userIdObject })  // Use 'user' instead of 'userId'
+        .sort({ created_at: -1 }) // Sort by latest likes
+        .skip(skip) // Skip previous pages
+        .limit(limit); // Limit to current page size
+  
+      const totalLikes = await Like.countDocuments({ user: userIdObject }); // Total number of likes by the user
+  
+      res.status(200).json({
+        likes,
+        pagination: {
+          currentPage: page,
+          totalLikes,
+          pageSize: limit,
+        },
+      });
+    } catch (error) {
+      console.error('Error:', error.message);
+      res.status(500).json({ message: 'Server error', error: error.message });
+    }
+  });
 
 module.exports = router;

@@ -1,10 +1,11 @@
 const express = require('express');
 const Order = require('../models/Order');
 const Product = require('../models/Product');  // Import Product model to check product details
+const authMiddleware = require('../middlewares/authMiddleware');
 const router = express.Router();
 
 // Create an order
-router.post('/create', async (req, res) => {
+router.post('/create',authMiddleware,  async (req, res) => {
     const { user, products, delivery_address, payment_method } = req.body;
 
     try {
@@ -57,7 +58,7 @@ router.post('/create', async (req, res) => {
 });
 
 // Update an order
-router.put('/update/:id', async (req, res) => {
+router.put('/update/:id', authMiddleware, async (req, res) => {
     const { products, status, delivery_address, payment_method } = req.body;
 
     try {
@@ -111,7 +112,7 @@ router.put('/update/:id', async (req, res) => {
 });
 
 // Delete an order
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/delete/:id',authMiddleware,  async (req, res) => {
     try {
         const order = await Order.findByIdAndDelete(req.params.id);
 

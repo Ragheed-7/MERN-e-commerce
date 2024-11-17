@@ -1,10 +1,11 @@
 const express = require('express');
 const Cart = require('../models/Cart'); // Correct import for the Cart model
 const Product = require('../models/Product'); 
+const authMiddleware = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 // Create a cart
-router.post('/create', async (req, res) => {
+router.post('/create',authMiddleware,  async (req, res) => {
     const { user, items } = req.body;
 
     try {
@@ -65,7 +66,7 @@ router.post('/create', async (req, res) => {
 });
 
 // Update a cart
-router.put('/update/:id', async (req, res) => {
+router.put('/update/:id',authMiddleware,  async (req, res) => {
     const { items } = req.body;
 
     try {
@@ -132,9 +133,8 @@ router.put('/update/:id', async (req, res) => {
     }
 });
 
-
 // Delete a cart
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/delete/:id',authMiddleware,  async (req, res) => {
     try {
         const cart = await Cart.findByIdAndDelete(req.params.id);
 

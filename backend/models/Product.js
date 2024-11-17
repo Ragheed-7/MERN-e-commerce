@@ -19,6 +19,7 @@ const ProductSchema = new Schema({
         required: true,
     },
     category: {
+        enum: ['cars', 'pets', 'devices'],
         type: String,
         required: true,
     },

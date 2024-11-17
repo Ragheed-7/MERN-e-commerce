@@ -17,6 +17,10 @@ const OrderSchema = new mongoose.Schema({
                 type: Number,
                 required: true,
                 min: 1
+            },
+            priceOfOne: {
+                type: Number,
+                required: true
             }
         }
     ],
@@ -33,9 +37,8 @@ const OrderSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    payment_method: {
-        type: String,
-        enum: ['Credit Card', 'Wish Money', 'Cash on Delivery'],
+    totalPrice: {
+        type: Number,
         required: true
     }
 }, {
