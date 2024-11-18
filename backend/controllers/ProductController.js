@@ -158,8 +158,7 @@ router.get('/search/value',authMiddleware, async (req, res) => {
       // Calculate total products matching the search query
       const totalProducts = await Product.countDocuments(productsQuery);
   
-      // Calculate total pages for pagination
-      const totalPages = Math.ceil(totalProducts / pageLimit);
+     
   
       // Return the products and pagination info
       res.status(200).json({
@@ -175,6 +174,50 @@ router.get('/search/value',authMiddleware, async (req, res) => {
       res.status(500).json({ message: 'Server error', error: error.message });
     }
   });
+
+// searching by price
+router.get('/search/price',authMiddleware, async (req, res) => {
+    try {
+        // Extract price range from query parameters
+        const { price_min = 0, price_max = 1000000 } = req.query;
+
+        // Convert price_min and price_max to numbers
+        const minPrice = parseFloat(price_min);
+        const maxPrice = parseFloat(price_max);
+
+        // Ensure the price range is valid
+        if (isNaN(minPrice) || isNaN(maxPrice)) {
+            return res.status(400).json({
+                message: 'Invalid price range. Please provide valid numerical values for price_min and price_max.',
+            });
+        }
+
+        // Fetch products within the price range
+        const products = await Product.find({
+            price: { $gte: minPrice, $lte: maxPrice }, // Filtering by price range
+        });
+
+        // Check if products were found
+        if (products.length === 0) {
+            return res.status(404).json({
+                message: 'No products found within the specified price range.',
+                data: null,
+            });
+        }
+
+        // Return the products in the response
+        res.status(200).json({
+            message: 'Products fetched successfully!',
+            data: products,
+        });
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        res.status(500).json({
+            message: 'Something went wrong. Please try again later.',
+            error: error.message,
+        });
+    }
+});
   
 
 

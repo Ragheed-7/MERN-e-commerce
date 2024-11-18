@@ -3,6 +3,7 @@ const User = require('../models/User'); // Correct import for the User model
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const authMiddleware = require('../middlewares/authMiddleware');
+const signToken = require('../utils/signToken');
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 const router = express.Router();
@@ -34,8 +35,7 @@ router.post('/create', async (req, res) => {
 
         // Save the new user to the database
         await user.save();
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
+        const token = signToken(user._id);
         res.status(201).json({
             errors: null,
             message: 'User created successfully!',
@@ -75,7 +75,7 @@ router.post('/login', async (req, res) => {
         }
 
         // Generate a JWT token if credentials are correct
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = signToken(user._id);
 
         // Return the token in the response
         res.status(200).json({
