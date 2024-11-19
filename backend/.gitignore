@@ -16,6 +16,7 @@ pids
 
 # Directory for module dependencies
 node_modules/
+images/
 
 # Debug files
 *.swp

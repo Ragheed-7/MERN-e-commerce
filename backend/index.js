@@ -7,7 +7,7 @@ const ReviewController = require('./controllers/ReviewController');
 const LikeController = require('./controllers/LikeController'); 
 const CartController = require('./controllers/CartController'); 
 const OrderController = require('./controllers/OrderController'); 
-
+const path = require('path')
 
 dotenv.config();
 
@@ -16,9 +16,10 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(express.json());
-
 // Connect to MongoDB
 connectDB();
+
+app.use('/images', express.static(path.join(__dirname, 'images')))
 
 const prefix = '/api';
 const version = '/v1';

@@ -1,21 +1,35 @@
 const express = require('express');
 const Product = require('../models/Product');  // Correct import, without destructuring
 const authMiddleware = require('../middlewares/authMiddleware');
+const  ImageUpload  = require('../middlewares/imageStorageMiddleware');
 
 const router = express.Router();
 
 // Create a new product
-router.post('/create', authMiddleware ,async (req, res) => {
-    const { name, description, price, pictures, category, number_of_reviews, sum_of_ratings } = req.body;
+router.post('/create',  ImageUpload.array('pictures', 5) ,async (req, res) => {
     try {
+    const { name, description, price,  category} = req.body;
+    const pictures = req.files.map((file) => file.path)
+    
+    console.log('Files:', req.files); // Logs uploaded files
+    console.log('Body:', req.body);   // Logs other fields
+
+        if (
+            !name ||
+            !description ||
+            !price ||
+            !pictures.length ||
+            !category
+        ) {
+            throw new Error("At least one of the required fields is empty")
+        }
+
         const product = new Product({
             name,
             description,
             price,
             pictures,
-            category,
-            number_of_reviews,
-            sum_of_ratings,
+            category
         });
 
         await product.save();

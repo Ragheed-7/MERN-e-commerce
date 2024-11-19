@@ -25,7 +25,7 @@ const ProductSchema = new Schema({
     },
     number_of_reviews: {
         type: Number,
-        required: true,
+       
     },
     sum_of_ratings: {
         type: Number,
