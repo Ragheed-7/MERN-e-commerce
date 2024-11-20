@@ -10,9 +10,7 @@ router.post('/create',  ImageUpload.array('pictures', 5) ,async (req, res) => {
     try {
     const { name, description, price,  category} = req.body;
     const pictures = req.files.map((file) => file.path)
-    
-    console.log('Files:', req.files); // Logs uploaded files
-    console.log('Body:', req.body);   // Logs other fields
+
 
         if (
             !name ||
@@ -232,6 +230,22 @@ router.get('/search/price',authMiddleware, async (req, res) => {
         });
     }
 });
+
+router.get('/display/latest', async (req,res)=>{
+    try {
+        const products = await Product.find().sort({ createdAt: -1 }).limit(20);
+        res.status(200).json({
+          success: true,
+          products,
+        });
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: "Failed to fetch products",
+          error: error.message,
+        });
+      }
+})
   
 
 

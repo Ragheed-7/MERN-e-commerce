@@ -8,6 +8,7 @@ const LikeController = require('./controllers/LikeController');
 const CartController = require('./controllers/CartController'); 
 const OrderController = require('./controllers/OrderController'); 
 const path = require('path')
+const cors = require('cors');
 
 dotenv.config();
 
@@ -16,6 +17,8 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(express.json());
+app.use(cors()); // Allow all origins by default
+
 // Connect to MongoDB
 connectDB();
 
