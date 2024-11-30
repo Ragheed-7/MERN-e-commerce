@@ -1,15 +1,24 @@
 import React from 'react';
-import Header from './components/Header';
-import ProductCarousel from './components/ProductCarousel';
+import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import Home from './components/Home';
+import Login from './components/Login';
+import SignUp from './components/Signup';
+import AddProduct from './components/AddProduct';
+
 
 const App = () => {
 
   return (
    <>
-   <Header/>
-   <h1 className="text-center text-3xl font-bold mt-4">Welcome to Our Store</h1>
-      <ProductCarousel />
-   </>
+   <Router>
+    <Routes>
+      <Route path="/home" element={<Home/>} />
+      <Route path="/" element={<Login/>} />
+      <Route path="/signup" element={<SignUp/>} />
+      <Route path="/AddProduct" element={<AddProduct/>} />
+    </Routes>
+   </Router>
+</>
   );
 };
 
